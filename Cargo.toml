@@ -1,0 +1,49 @@
+[package]
+name = "emulatorwasm2"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+rand = "0.8.5"
+cfg-if = "1"
+anyhow = "1.0"
+bytemuck = { version = "1.16", features = [ "derive" ] }
+env_logger = "0.10"
+log = "0.4"
+pollster = "0.3"
+wgpu = "22.0"
+winit = { version = "0.29", features = ["rwh_05"] }
+instant = { version = "0.1", features = [ "wasm-bindgen", "inaccurate" ] }
+
+[dependencies.image]
+version = "0.24"
+default-features = false
+features = ["png", "jpeg"]
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+console_error_panic_hook = "0.1"
+console_log = "1.0"
+wgpu = { version = "22.0", features = ["webgl"]}
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+getrandom = { version = "0.2.15", features = ["js"] }
+web-sys = { version = "0.3", features = [
+    "Document",
+    "Window",
+    "Element",
+    'Headers',
+    'Request',
+    'RequestInit', 'RequestMode', 'Response','HtmlAudioElement',
+]}
+
+[build-dependencies]
+anyhow = "1.0"
+fs_extra = "1.2"
+glob = "0.3"
+
+[[bin]]
+name = "hello_wasm"
+path = "src/main.rs"
