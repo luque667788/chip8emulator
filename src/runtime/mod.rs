@@ -33,6 +33,7 @@ impl<'a> Runtime<'a> {
         let mut chip8 = Emulator::new(Variant::Legacy);
         chip8.load_characters();
         let name = "PONG";
+        /*
         cfg_if::cfg_if! {
             if #[cfg(target_arch = "wasm32")] {
             let name = "http://localhost:3000/roms/".to_owned() + name;
@@ -41,7 +42,7 @@ impl<'a> Runtime<'a> {
                 let name = "roms/".to_owned() + name;
                 chip8.load_rom(&name);
             }
-        }
+        }*/
 
 
         let timeref = instant::Instant::now();

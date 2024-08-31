@@ -113,7 +113,7 @@ pub struct State<'a> {
     config: wgpu::SurfaceConfiguration,
     pub size: winit::dpi::PhysicalSize<u32>,
     render_pipeline: wgpu::RenderPipeline,
-    window: &'a Window,
+    pub window: &'a Window,
     chip8screen: Chip8Screen,
 }
 

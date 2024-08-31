@@ -1,5 +1,3 @@
-
-
 use std::sync::mpsc::SyncSender;
 
 use std::{fs::File, io::Read};
@@ -493,8 +491,8 @@ impl Emulator {
             // can not be equal to 0
             if self.sound_timer == 1 {
                 log::warn!("BEEP BEEP BEEP");
-                #[cfg(target_arch = "wasm32")]
-                crate::audio::play();
+                //#[cfg(target_arch = "wasm32")]
+                //crate::audio::play();
             }
             self.sound_timer -= 1;
         }
