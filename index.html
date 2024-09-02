@@ -13,6 +13,11 @@
             <input type="file" id="rom-upload" style="display: none;">
             <button id="upload-button">Choose ROM</button>
             <p id="file-name">No file chosen</p>
+            <p style="font-weight: bold">(or)</p>
+            <h3>Select from available ROMS in the server</h2>
+            <select id="rom-select">
+            <option value="">Select ROM from server</option>
+            </select>
         </div>
         <!-- Credit Section -->
         <div class="credit-section">
@@ -34,7 +39,37 @@
             const uploadButton = document.getElementById('upload-button');
             const fileNameDisplay = document.getElementById('file-name');
             const uploadSection = document.querySelector('.upload-section');
+            const roms = [
+                "PONG",
+                "rom2.ch8",
+                "rom3.ch8",
+                // Add more ROM files as needed
+            ];
 
+            const romSelect = document.getElementById("rom-select");
+
+          roms.forEach((rom) => {
+            const option = document.createElement("option");
+            option.value = rom;
+            option.textContent = rom;
+            romSelect.appendChild(option);
+          });
+
+          romSelect.addEventListener("change", async (event) => {
+            const selectedRom = event.target.value;
+            if (selectedRom) {
+              const response = await fetch(`/roms/${selectedRom}`);
+              const romData = await response.arrayBuffer();
+              const romDataArray = new Uint8Array(romData);
+              // Load the ROM data into the emulator
+              // Save the ROM data to localStorage
+            localStorage.setItem("latestRomData", JSON.stringify(Array.from(romDataArray)));
+            localStorage.setItem("latestRomName", selectedRom);
+            localStorage.removeItem('uploadedFile');
+            localStorage.removeItem('uploadedFileName');
+            location.reload();
+            }
+          });
             
             
             uploadButton.addEventListener('click', () => {
@@ -50,6 +85,8 @@
                     const uint8Array = new Uint8Array(arrayBuffer);
                     localStorage.setItem('uploadedFile', JSON.stringify(Array.from(uint8Array)));
                     localStorage.setItem('uploadedFileName', file.name);
+                    localStorage.removeItem('latestRomData');
+                    localStorage.removeItem('latestRomName');
                     location.reload();
                 }
             });
@@ -70,16 +107,26 @@
 
             // Check if there's a file stored in localStorage
             const storedFile = localStorage.getItem('uploadedFile');
+            // Load the latest ROM data from localStorage if available
+            const savedRomData = localStorage.getItem("latestRomData");
+            const savedRomName = localStorage.getItem("latestRomName");
+            
             if (storedFile) {
                 const fileName = localStorage.getItem('uploadedFileName');
                 fileNameDisplay.textContent = fileName;
                 const uint8Array = new Uint8Array(JSON.parse(storedFile));
                 await init();
                 console.log("WASM Loaded");
-                console.log("uploading");
+                console.log("uploading from client");
                 await run(uint8Array);
-                localStorage.removeItem('uploadedFile');
-                localStorage.removeItem('uploadedFileName');
+                
+            }
+            else if (savedRomData && savedRomName) {
+                await init();
+                console.log("WASM Loaded");
+                const romDataArray = new Uint8Array(JSON.parse(savedRomData));
+                console.log("uploading from server");
+                await run(romDataArray);                
             }
         }
 

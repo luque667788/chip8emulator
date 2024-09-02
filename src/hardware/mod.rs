@@ -109,7 +109,7 @@ impl Emulator {
     pub fn load_rom_from_vec(&mut self, data: js_sys::Uint8Array) {
         let data: Vec<u8> = data.to_vec();
         // Load the ROM into memory starting at 0x200
-        log::warn!("{:?}",data);
+        //log::warn!("{:?}",data);
         // Load the ROM into memory starting at 0x200
         let start = START_ADDRESS as usize;
         let end = start + data.len();
