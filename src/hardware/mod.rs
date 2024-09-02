@@ -109,7 +109,7 @@ impl Emulator {
     pub fn load_rom_from_vec(&mut self, data: js_sys::Uint8Array) {
         let data: Vec<u8> = data.to_vec();
         // Load the ROM into memory starting at 0x200
-        //log::warn!("{:?}",data);
+        log::warn!("{:?}",data);
         // Load the ROM into memory starting at 0x200
         let start = START_ADDRESS as usize;
         let end = start + data.len();
@@ -150,8 +150,8 @@ impl Emulator {
     }
 
     fn push(&mut self, value: u16) {
-        if value >= STACK_SIZE as u16 {
-            log::error!("Stack overflow, trying to acess: {value}");
+        if self.stackpointer as usize >= STACK_SIZE {
+            log::error!("Stack overflow, trying to acess: {}",self.stackpointer);
             return;
         }
         self.stack[self.stackpointer as usize] = value;
@@ -493,8 +493,8 @@ impl Emulator {
             // can not be equal to 0
             if self.sound_timer == 1 {
                 log::warn!("BEEP BEEP BEEP");
-                //#[cfg(target_arch = "wasm32")]
-                //crate::audio::play();
+                #[cfg(target_arch = "wasm32")]
+                crate::audio::play();
             }
             self.sound_timer -= 1;
         }
