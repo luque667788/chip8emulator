@@ -1,10 +1,12 @@
 
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen_futures::JsFuture;
+use web_sys::js_sys;
 #[cfg(target_arch = "wasm32")]
 use web_sys::js_sys::Promise;
 
 use std::sync::mpsc::{self, Receiver, SyncSender};
+use std::sync::Mutex;
 use std::time::{self, Duration};
 use winit::{
     event::{ElementState, Event, KeyEvent, WindowEvent},
@@ -19,7 +21,19 @@ use crate::graphics::{self, State};
 use crate::hardware::SCREEN_HEIGHT;
 use crate::hardware::SCREEN_WIDTH;
 
+
+/*/
+use lazy_static::lazy_static;
+
+lazy_static! {
+    static ref MY_VEC: Mutex<Vec<u8>> = Mutex::new(Vec::new());
+}*/
+
+use crate::util::sleep;
+
 const CPU_CYCLE_PERIOD: time::Duration = time::Duration::from_millis(4);
+
+const TIMER_CYCLE_PERIOD: time::Duration = time::Duration::from_millis(20);
 pub struct Runtime<'a> {
     chip8: Emulator,
     timeref: instant::Instant,
@@ -28,12 +42,12 @@ pub struct Runtime<'a> {
 }
 
 impl<'a> Runtime<'a> {
-    pub async fn new(graphics: State<'a>) -> Self {
-        
+    pub async fn new(graphics: State<'a>,data: js_sys::Uint8Array) -> Self {
         let mut chip8 = Emulator::new(Variant::Legacy);
         chip8.load_characters();
-        let name = "PONG";
+
         /*
+        let name = "IBM Logo.ch8";
         cfg_if::cfg_if! {
             if #[cfg(target_arch = "wasm32")] {
             let name = "http://localhost:3000/roms/".to_owned() + name;
@@ -43,6 +57,10 @@ impl<'a> Runtime<'a> {
                 chip8.load_rom(&name);
             }
         }*/
+        sleep(250).await;
+        chip8.load_rom_from_vec(data);
+
+
 
 
         let timeref = instant::Instant::now();
@@ -75,8 +93,9 @@ impl<'a> Runtime<'a> {
     }
 
     pub fn run(&mut self) {
+        
 
-        if self.timerefclock.elapsed() >= Duration::from_millis(16) {
+        if self.timerefclock.elapsed() >= TIMER_CYCLE_PERIOD {
             self.chip8.timer_cycle();
             self.timerefclock = instant::Instant::now();
         }

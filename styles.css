@@ -1,0 +1,80 @@
+.credit-section {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #777;
+}
+
+.credit-section a {
+    color: #007bff;
+    text-decoration: none;
+    margin: 0 5px;
+    transition: color 0.3s ease;
+}
+
+.credit-section a:hover {
+    color: #0056b3;
+}
+
+canvas {
+    border: 10px solid #000;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 640px;
+    width: 100%; /* Adjust the width as needed */
+    max-width: 1280px; /* Adjust the maximum width as needed */
+    margin-left: auto;
+    margin-right: auto;
+    display: block; /* Ensure the canvas is displayed as a block element */
+}
+
+.hidden {
+    display: none;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.upload-section {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2px dashed #ccc;
+    padding: 30px;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+
+.upload-section input[type="file"] {
+    display: block;
+    margin: 10px auto;
+}
+
+.upload-section button {
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-size: 16px;
+}
+
+.upload-section button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.upload-section p {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+}

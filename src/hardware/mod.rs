@@ -6,6 +6,7 @@ use std::{fs::File, io::Read};
 use wasm_bindgen::prelude::*;
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen_futures::JsFuture;
+use web_sys::js_sys;
 #[cfg(target_arch = "wasm32")]
 use web_sys::{Request, RequestInit, RequestMode, Response};
 
@@ -105,18 +106,15 @@ impl Emulator {
         }
     }
 
-    pub fn load_rom(&mut self, filename: &str) {
-        let mut file = File::open(filename).expect("Failed to open ROM file");
-        let mut buffer = Vec::new();
-        let mut end = file
-            .read_to_end(&mut buffer)
-            .expect("Failed to read ROM file");
-
+    pub fn load_rom_from_vec(&mut self, data: js_sys::Uint8Array) {
+        let data: Vec<u8> = data.to_vec();
+        // Load the ROM into memory starting at 0x200
+        log::warn!("{:?}",data);
         // Load the ROM into memory starting at 0x200
         let start = START_ADDRESS as usize;
-        end += start;
-        self.memory[start..end].copy_from_slice(&buffer);
-
+        let end = start + data.len();
+        self.memory[start..end].copy_from_slice(&data);
+    
         // Set the program counter to the start address
         self.programcounter = START_ADDRESS;
     }
@@ -137,7 +135,7 @@ impl Emulator {
         let resp: Response = response.clone().dyn_into().unwrap();
         let array_buffer = JsFuture::from(resp.array_buffer().unwrap()).await.unwrap();
         let rom_data = Uint8Array::new(&array_buffer).to_vec();
-        
+        log::warn!("{:?}",rom_data);
         // Load the ROM into memory starting at 0x200
         let start = START_ADDRESS as usize;
         let end = start + rom_data.len();

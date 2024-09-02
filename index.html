@@ -1,29 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learn WGPU</title>
-    <style>
-        canvas {
-            background-color: black;
-            width: 1280px; /* Set the desired width */
-            height: 640px; /* Set the desired height */
-        }
-    </style>
+    <title>Rust Chip8 Emulator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body id="wasm-example">
-  <script type="module">
-      import init from "./pkg/emulatorwasm2.js";
-      init().then(() => {
-          console.log("WASM Loaded");
-      });
+    <div class="container">
+        <h1>Rust Chip8 Emulator</h1>
+        <div class="upload-section">
+            <input type="file" id="rom-upload" style="display: none;">
+            <button id="upload-button">Choose ROM</button>
+            <p id="file-name">No file chosen</p>
+        </div>
+        <!-- Credit Section -->
+        <div class="credit-section">
+            <p>Author: Luiz Henrique Mendonça</p>
+            <p>
+                <a href="https://github.com/luque667788/" target="_blank">GitHub</a> |
+                <a href="https://www.linkedin.com/in/luiz-henrique-salles-de-oliveira-mendon%C3%A7a-3963b928b/" target="_blank">LinkedIn</a>
+            </p>
+        </div>
+    </div>
+    <script type="module">
+        import init, { run } from "./pkg/emulatorwasm2.js";
+        let uploadClicked = false;
 
-      
-  </script>
+        async function start() {
+            
+
+            const fileInput = document.getElementById('rom-upload');
+            const uploadButton = document.getElementById('upload-button');
+            const fileNameDisplay = document.getElementById('file-name');
+            const uploadSection = document.querySelector('.upload-section');
+
+            
+            
+            uploadButton.addEventListener('click', () => {
+                fileInput.click();
+                console.log("food is good");
+            });
+
+            fileInput.addEventListener('change', async (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    fileNameDisplay.textContent = file.name;
+                    const arrayBuffer = await file.arrayBuffer();
+                    const uint8Array = new Uint8Array(arrayBuffer);
+                    localStorage.setItem('uploadedFile', JSON.stringify(Array.from(uint8Array)));
+                    localStorage.setItem('uploadedFileName', file.name);
+                    location.reload();
+                }
+            });
+
+            // Focus the canvas element once it is created
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.tagName === 'CANVAS') {
+                            node.focus();
+                            observer.disconnect(); // Stop observing once the canvas is found and focused
+                        }
+                    });
+                });
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            // Check if there's a file stored in localStorage
+            const storedFile = localStorage.getItem('uploadedFile');
+            if (storedFile) {
+                const fileName = localStorage.getItem('uploadedFileName');
+                fileNameDisplay.textContent = fileName;
+                const uint8Array = new Uint8Array(JSON.parse(storedFile));
+                await init();
+                console.log("WASM Loaded");
+                console.log("uploading");
+                await run(uint8Array);
+                localStorage.removeItem('uploadedFile');
+                localStorage.removeItem('uploadedFileName');
+            }
+        }
+
+        start();
+    </script>
 </body>
-
 </html>

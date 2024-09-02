@@ -20,20 +20,33 @@ mod runtime;
 mod texture;
 mod audio;
 mod util;
+use std::sync::{Arc, Mutex};
+use runtime::Runtime;
 
-#[cfg_attr(target_arch = "wasm32", wasm_bindgen(start))]
-pub async fn run() {
+//#[cfg_attr(target_arch = "wasm32", wasm_bindgen(start))]
+use web_sys::js_sys;
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+pub async fn run(data: js_sys::Uint8Array) {
+    
+
+    
+
     cfg_if::cfg_if! {
         if #[cfg(target_arch = "wasm32")] {
             std::panic::set_hook(Box::new(console_error_panic_hook::hook));
             console_log::init_with_level(log::Level::Warn).expect("Could't initialize logger");
+            
         } else {
             env_logger::Builder::new()
                 .filter_level(log::LevelFilter::Warn)
                 .init();
         }
     }
+
     log::warn!("USER::: Starting");
+
+
     let event_loop = EventLoop::new().unwrap();
     event_loop.set_control_flow(ControlFlow::Poll);
     let window = WindowBuilder::new().build(&event_loop).unwrap();
@@ -59,7 +72,10 @@ pub async fn run() {
 
     // State::new uses async code, so we're going to wait for it to finish
     let state = graphics::State::new(&window).await;
-    let mut runtime = runtime::Runtime::new(state).await;
+    //let mut runtime = runtime::Runtime::new(state).await;
+
+    let mut runtime = runtime::Runtime::new(state,data).await; // Assuming Runtime has a new() method
+
     let mut surface_configured = false;
 
     event_loop
@@ -103,10 +119,14 @@ pub async fn run() {
                     }
                 }
                 Event::AboutToWait => {
-                    runtime.run()
+                    runtime.run();
+                    //log::warn!("USER::: ROM Loaded");
                 }
                 _ => {}
             }
         })
         .unwrap();
+
+        
+
 }
