@@ -99,18 +99,23 @@ impl<'a> Runtime<'a> {
             self.chip8.timer_cycle();
             self.timerefclock = instant::Instant::now();
         }
-
         if self.chip8.screen_changed{
             self.graphics.update_buffer(&self.chip8.getscreen());
             let _ = self.graphics.call_fast_render();
             //log::warn!("USER::: Screen Changed");
             self.chip8.screen_changed = false;
         }
+        
 
 
-
-        if self.timeref.elapsed() >= CPU_CYCLE_PERIOD {
-            self.chip8.cpu_cycle();
+        let a = self.timeref.elapsed();
+        if a >= CPU_CYCLE_PERIOD {
+            let b = a.as_millis() / CPU_CYCLE_PERIOD.as_millis();
+            for _ in 0..b{
+                self.chip8.cpu_cycle();
+                
+            }           
+            
             self.timeref = instant::Instant::now();
         }
 
