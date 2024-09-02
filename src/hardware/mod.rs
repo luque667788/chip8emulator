@@ -150,6 +150,10 @@ impl Emulator {
     }
 
     fn push(&mut self, value: u16) {
+        if value >= STACK_SIZE as u16 {
+            log::error!("Stack overflow, trying to acess: {value}");
+            return;
+        }
         self.stack[self.stackpointer as usize] = value;
         self.stackpointer += 1;
     }

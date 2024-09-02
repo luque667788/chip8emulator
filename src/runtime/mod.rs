@@ -33,7 +33,7 @@ use crate::util::sleep;
 
 const CPU_CYCLE_PERIOD: time::Duration = time::Duration::from_millis(4);
 
-const TIMER_CYCLE_PERIOD: time::Duration = time::Duration::from_millis(20);
+const TIMER_CYCLE_PERIOD: time::Duration = time::Duration::from_millis(16);
 pub struct Runtime<'a> {
     chip8: Emulator,
     timeref: instant::Instant,
@@ -47,7 +47,7 @@ impl<'a> Runtime<'a> {
         chip8.load_characters();
 
         /*
-        let name = "IBM Logo.ch8";
+        let name = "TICTAC";
         cfg_if::cfg_if! {
             if #[cfg(target_arch = "wasm32")] {
             let name = "http://localhost:3000/roms/".to_owned() + name;
