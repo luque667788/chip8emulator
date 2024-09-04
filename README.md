@@ -11,7 +11,7 @@ You can test and use the emulator at this link: [Chip8 Emulator](https://luque66
 - Uses a custom solution for rendering with WGPU for fast graphics.
 - Supports basic sound as the original Chip8 did.
 - The CPU clock is time-based and stabilizes if the running loop takes too much time.
-- Compiles to WebAssembly using Webpack.
+- Compiles to WebAssembly using wasm-pack.
 
 ## Building the Project
 
