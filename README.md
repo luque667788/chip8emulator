@@ -1,6 +1,6 @@
 # Chip8 Emulator
 
-This project is a Chip8 emulator/interpreter written from scratch in Rust. It was created for learning purposes and is still under development. The emulator runs in the browser via `wasm-bindgen` and `wgpu/webgl`.
+This project is a Chip8 emulator/interpreter written from scratch in Rust. It was created for learning purposes and is still under development. The emulator runs in the browser using `wasm-bindgen`, for the rust/javascript interactions, and graphics using `wgpu/webgl`.
 
 You can test and use the emulator at this link: [Chip8 Emulator](https://luque667788.github.io/chip8emulator/).
 
