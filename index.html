@@ -104,6 +104,21 @@
                     location.reload();
                 }
             });
+            const observer2 = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const image = document.getElementById('keyboard-layout');
+                    if (entry.isIntersecting) {
+                        image.style.opacity = '0';
+                    } else {
+                        image.style.opacity = '1';
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px', // Adjust this to fine-tune the intersection area
+                threshold: 0.9 // Adjust this to control the sensitivity of the intersection observer
+            });
+
 
             // Focus the canvas element once it is created
             const observer = new MutationObserver((mutations) => {
@@ -111,11 +126,13 @@
                     mutation.addedNodes.forEach((node) => {
                         if (node.tagName === 'CANVAS') {
                             node.focus();
+                            observer2.observe(node);
                             observer.disconnect(); // Stop observing once the canvas is found and focused
                         }
                     });
                 });
             });
+
 
             observer.observe(document.body, { childList: true, subtree: true });
 
