@@ -1,0 +1,15 @@
+{
+  "name": "emulatorwasm2",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "emulatorwasm2_bg.wasm",
+    "emulatorwasm2.js",
+    "emulatorwasm2.d.ts"
+  ],
+  "main": "emulatorwasm2.js",
+  "types": "emulatorwasm2.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
