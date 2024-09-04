@@ -4,7 +4,7 @@
     top: 10px;
     width: 300px; /* Adjust the width as needed */
     opacity: 1; /* Make it less noticeable */
-    z-index: 1000; /* Ensure it stays on top */
+    z-index: 0; /* Ensure it stays on top */
 }
 
 .credit-section {
