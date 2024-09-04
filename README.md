@@ -1,43 +1,45 @@
-# Rust CHIP8 EMULATOR
 # Chip8 Emulator
 
-This project is a Chip8 emulator/interpreter made from scratch written in Rust. This project was made for learning purposes and is still under development. It runs on in the browser via wasm-bindgen and wgpu/webgl
+This project is a Chip8 emulator/interpreter written from scratch in Rust. It was created for learning purposes and is still under development. The emulator runs in the browser via `wasm-bindgen` and `wgpu/webgl`.
 
-you can test and use the emulator at this link: https://luque667788.github.io/chip8emulator/
-
+You can test and use the emulator at this link: [Chip8 Emulator](https://luque667788.github.io/chip8emulator/).
 
 ## Features
 
-- Emulates the Chip8 system
-- load ROMs from files.
-- Uses custom solution for rendering with WGPU for fast rendering graphics
-- Supports basic sound as chip8 did.
-- cpu clock is time based and stabilizes if the running loop is taking too much time 
-- compiles to wasm using webpack
-
+- Emulates the Chip8 system.
+- Loads ROMs from files.
+- Uses a custom solution for rendering with WGPU for fast graphics.
+- Supports basic sound as the original Chip8 did.
+- The CPU clock is time-based and stabilizes if the running loop takes too much time.
+- Compiles to WebAssembly using Webpack.
 
 ## Building the Project
-this project is compiled using wasm-pack tooling
-after cloning the repo:
-run the following line: wasm-pack build --target web --release
 
-for faster build times use the flag --dev instead
+This project is compiled using `wasm-pack` tooling. After cloning the repository, run the following command:
 
-then run the website locally you can serve it by runnig npx serve on the root folder of the project
+```sh
+wasm-pack build --target web --release
+```
+For faster build times, use the --dev flag instead:
+```sh
+wasm-pack build --target web --dev
+```
 
-## Desing Phylisosy
+To run the website locally, you can serve it by running the following command in the root folder of the project:
+ ```sh
+  npx serve
+```
 
-I wanted to create this project to get more closer to understanding the hardware. I always wanted to create an emulator and chip8 
-is one of the best architerctures to start. OF course to add some challenge i decided to implement the graphics from scratch. I used wgpu for as it allows platform agnostic graphics programmign and works well with rust. For the graphics i tried to optimize and also really understand the render pipline by inovating a little bit. Instead of the program sending all of the vertices of the triangels and etc to the vertex buffer in this project the only data the vertex buffer recevier is the index os the vertex (as alwasy)
- and it has acces to a uniform buffer and this uniform buffer contains the data of the chip8 display. theoretically it cooul be be only 64*32 bits. then i map to the screen and do all the calculations to find the vertex cordinates inside the shader making the program significantly faster then the other method which is used by most emulator that is drawing a texture and then sinding it to the gpu. 
-## Chip8 Architecture Support
+## Design Philosophy
+This project was created for learning purposes to gain a deeper understanding of hardware architectures. Chip8 is one of the best architectures to start with for creating an emulator. To add some challenge, I decided to implement the graphics from scratch using WGPU, which allows for platform-agnostic graphics programming and works well with Rust.
 
-The emulator supports two architectures: legacy and modern implementations of the Chip8.
+For the graphics, I aimed to optimize and understand the render pipeline by innovating a bit. Instead of sending all the vertices of the triangles to the vertex buffer, the only data the vertex buffer receives is the index of the vertex. It has access to a uniform buffer containing the data of the Chip8 display, theoretically it could be only 64x32 bits. I then map this to the screen and perform all calculations to find the vertex coordinates inside the shader, making the program significantly faster than the common method of drawing a texture and sending it to the GPU.   
 
 ## Contributing
-
-Contributions are welcome! 
+Feel free to fork this repository and submit pull requests. Any contributions to improve the code quality and add new features are welcome!
 
 ## License
+This project is licensed under the MIT License.
 
-This project is licensed under the MIT License
+## Extra
+Thank you for checking out this project! If you have any questions or feedback, feel free to open an issue or contact me directly on [Linkedin](https://www.linkedin.com/in/luiz-henrique-salles-de-oliveira-mendon%C3%A7a-3963b928b/).
