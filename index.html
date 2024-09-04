@@ -72,7 +72,7 @@
           romSelect.addEventListener("change", async (event) => {
             const selectedRom = event.target.value;
             if (selectedRom) {
-              const response = await fetch(`/roms/${selectedRom}`);
+              const response = await fetch(`/chip8emulator/roms/${selectedRom}`);
               const romData = await response.arrayBuffer();
               const romDataArray = new Uint8Array(romData);
               // Load the ROM data into the emulator
