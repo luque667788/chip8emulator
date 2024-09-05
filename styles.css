@@ -2,9 +2,10 @@
     position: fixed;
     right: 10px;
     top: 10px;
-    width: 300px; /* Adjust the width as needed */
+    width: 30%;
+    max-width: 300px; /* Adjust the width as needed */
     transition: opacity 0.5s;
-    /*z-index: -1000; /* Ensure it stays on top */
+    z-index: -1000; /* Ensure it stays on top */
 }
 
 .credit-section {
@@ -26,10 +27,10 @@
 
 canvas {
     border: 10px solid #000;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    height: 100%;
-    width: 100%; /* Adjust the width as needed */
+    margin-top: 1%;
+    margin-bottom: 5%;
+    height: 90%;
+    width: 90%; /* Adjust the width as needed */
     max-width: 1280px; /* Adjust the maximum width as needed */
     max-height: 640px;
     margin-left: auto;

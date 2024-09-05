@@ -8,7 +8,7 @@
 </head>
 <body id="wasm-example">
     <div class="container">
-        <h1>Rust Chip8 Emulator</h1>
+        <h1 id="title" >Rust Chip8 Emulator</h1>
         <div class="upload-section">
             <input type="file" id="rom-upload" style="display: none;">
             <button id="upload-button">Upload ROM</button>
@@ -29,139 +29,6 @@
         </div>
         <img id="keyboard-layout" src="https://cdn.hashnode.com/res/hashnode/image/upload/v1663500447801/JuvoQmwOy.png?auto=compress,format&format=webp" alt="Keyboard Layout" />
     </div>
-    <script type="module">
-        import init, { run } from "./pkg/emulatorwasm2.js";
-        let uploadClicked = false;
-
-        async function start() {
-            
-
-            const fileInput = document.getElementById('rom-upload');
-            const uploadButton = document.getElementById('upload-button');
-            const fileNameDisplay = document.getElementById('file-name');
-            const uploadSection = document.querySelector('.upload-section');
-            const roms = [
-                    "TEST ROM.ch8",
-                    "IBM Logo.ch8",
-                    "PONG",
-                    "TETRIS",
-                    "BLITZ",
-                    "BRIX",
-                    "CONNECT4",
-                    "GUESS",
-                    "HIDDEN",
-                    "INVADERS",
-                    "MISSILE",                    
-                    "PONG2",
-                    "TANK",
-                    "TICTAC",
-                    "UFO",
-                    "VBRIX",
-                    "WIPEOFF"
-                ];
-
-            const romSelect = document.getElementById("rom-select");
-
-          roms.forEach((rom) => {
-            const option = document.createElement("option");
-            option.value = rom;
-            option.textContent = rom;
-            romSelect.appendChild(option);
-          });
-
-          romSelect.addEventListener("change", async (event) => {
-            const selectedRom = event.target.value;
-            if (selectedRom) {
-              const response = await fetch(`https://luque667788.github.io/chip8emulator/roms/${selectedRom}`);
-              const romData = await response.arrayBuffer();
-              const romDataArray = new Uint8Array(romData);
-              // Load the ROM data into the emulator
-              // Save the ROM data to localStorage
-            localStorage.setItem("latestRomData", JSON.stringify(Array.from(romDataArray)));
-            localStorage.setItem("latestRomName", selectedRom);
-            localStorage.removeItem('uploadedFile');
-            localStorage.removeItem('uploadedFileName');
-            location.reload();
-            }
-          });
-            
-            
-            uploadButton.addEventListener('click', () => {
-                fileInput.click();
-                console.log("food is good");
-            });
-
-            fileInput.addEventListener('change', async (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    fileNameDisplay.textContent = file.name;
-                    const arrayBuffer = await file.arrayBuffer();
-                    const uint8Array = new Uint8Array(arrayBuffer);
-                    localStorage.setItem('uploadedFile', JSON.stringify(Array.from(uint8Array)));
-                    localStorage.setItem('uploadedFileName', file.name);
-                    localStorage.removeItem('latestRomData');
-                    localStorage.removeItem('latestRomName');
-                    location.reload();
-                }
-            });
-            const observer2 = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const image = document.getElementById('keyboard-layout');
-                    if (entry.isIntersecting) {
-                        image.style.opacity = '0';
-                    } else {
-                        image.style.opacity = '1';
-                    }
-                });
-            }, {
-                root: null,
-                rootMargin: '0px', // Adjust this to fine-tune the intersection area
-                threshold: 0.9 // Adjust this to control the sensitivity of the intersection observer
-            });
-
-
-            // Focus the canvas element once it is created
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    mutation.addedNodes.forEach((node) => {
-                        if (node.tagName === 'CANVAS') {
-                            node.focus();
-                            observer2.observe(node);
-                            observer.disconnect(); // Stop observing once the canvas is found and focused
-                        }
-                    });
-                });
-            });
-
-
-            observer.observe(document.body, { childList: true, subtree: true });
-
-            // Check if there's a file stored in localStorage
-            const storedFile = localStorage.getItem('uploadedFile');
-            // Load the latest ROM data from localStorage if available
-            const savedRomData = localStorage.getItem("latestRomData");
-            const savedRomName = localStorage.getItem("latestRomName");
-            
-            if (storedFile) {
-                const fileName = localStorage.getItem('uploadedFileName');
-                fileNameDisplay.textContent = fileName;
-                const uint8Array = new Uint8Array(JSON.parse(storedFile));
-                await init();
-                console.log("WASM Loaded");
-                console.log("uploading from client");
-                await run(uint8Array);
-                
-            }
-            else if (savedRomData && savedRomName) {
-                await init();
-                console.log("WASM Loaded");
-                const romDataArray = new Uint8Array(JSON.parse(savedRomData));
-                console.log("uploading from server");
-                await run(romDataArray);                
-            }
-        }
-
-        start();
-    </script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
